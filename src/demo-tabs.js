@@ -20,6 +20,24 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import {Switch, Route} from 'react-router-dom'
 import { Link, withRouter } from 'react-router-dom'
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import RestoreIcon from '@material-ui/icons/Restore';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import Button from '@material-ui/core/Button';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import Badge from '@material-ui/core/Badge';
+import Menu from '@material-ui/core/Menu';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import MoreIcon from '@material-ui/icons/MoreVert';
+
 import Mail from './pages/mail'
 import Hello from './pages/hello'
 import NotFound from './pages/404'
@@ -83,14 +101,66 @@ const useStyles = makeStyles(theme => ({
   nested: {
     paddingLeft: theme.spacing(4),
   },
+  grow: {
+    flexGrow: 1,
+  },
+  sectionDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
+  },
+  sectionMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  },
 }));
 
 function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
+  const [openMenu1, setOpenMenu1] = React.useState(false);
+  const [value, setValue] = React.useState(0);
   const pathname = 'aa';
   const writers = [{id:'1',name: "Hormas"}, {id:'2', name:"Jones"}, {id:'3', name:"Jack"}];
+  const anchorRef = React.useRef(null);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const isMenuOpen = Boolean(anchorEl);
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+    </Menu>
+  );
+
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
+  function handleProfileMenuOpen(event) {
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleMenuClose() {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+  }
+
+  function handleMobileMenuClose() {
+    setMobileMoreAnchorEl(null);
+  }
+
+  function handleMobileMenuOpen(event) {
+    setMobileMoreAnchorEl(event.currentTarget);
+  }
 
   function handleDrawerOpen() {
     setOpen(true);
@@ -98,6 +168,22 @@ function PersistentDrawerLeft() {
 
   function handleDrawerClose() {
     setOpen(false);
+  }
+  
+  function handleChange() {
+    
+  }
+
+  function handleToggle() {
+    setOpenMenu1(prevOpenMenu1 => !prevOpenMenu1);
+  }
+
+  function handleClose(event) {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpenMenu1(false);
   }
 
   return (
@@ -122,8 +208,89 @@ function PersistentDrawerLeft() {
           <Typography variant="h6" noWrap>
             Persistent drawer
           </Typography>
+          <Button
+            color={"inherit"}
+            ref={anchorRef}
+            aria-owns={open ? 'menu-list-grow' : undefined}
+            aria-haspopup="true"
+            onClick={handleToggle}
+          >
+            Maintenance
+          </Button>
+          <Popper open={openMenu1} anchorEl={anchorRef.current} transition disablePortal>
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+              >
+                <Paper id="menu-list-grow">
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList>
+                      <MenuItem component={Link} to="/mail" onClick={handleClose}>
+                        Maintain Asset Volatility Class
+                      </MenuItem>
+                      <MenuItem component={Link} to="/hello" onClick={handleClose}>
+                        Maintain Asset Volatility Class Correlation
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        Maintain Customer Eligibility
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        Maintain Product Allowable Channel
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        Maintain Product Detail
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        Maintain Product Group
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        Maintain Product Relation
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        Maintain Reference Data
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        Maintain Reference Data Allowable Channel
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        Maintain Staff Eligibility
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        Maintain System Parameter
+                      </MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
+
+          <div className={classes.grow} />
+          <div className={classes.sectionDesktop}>
+            <IconButton color="inherit">
+              <Badge badgeContent={4} color="secondary">
+                <MailIcon />
+              </Badge>
+            </IconButton>
+            <IconButton color="inherit">
+              <Badge badgeContent={17} color="secondary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+            <IconButton
+              edge="end"
+              aria-owns={isMenuOpen ? 'material-appbar' : undefined}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+          </div>
         </Toolbar>
       </AppBar>
+      {renderMenu}
       <Drawer
         className={classes.drawer}
         variant="persistent"
