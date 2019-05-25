@@ -41,6 +41,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import Mail from './pages/mail'
 import Hello from './pages/hello'
 import NotFound from './pages/404'
+import GraphQL from './pages/GraphQL'
 
 const drawerWidth = 340;
 
@@ -313,8 +314,8 @@ function PersistentDrawerLeft() {
             </ListItemIcon>
             Home
           </MenuItem>
-          <MenuItem component={Link} to="/mail" selected={'/mail' === pathname}>
-            Mail
+          <MenuItem component={Link} to="/graphql" selected={'/graphql' === pathname}>
+            Graph QL
           </MenuItem>
           <MenuItem component={Link} to="/hello" selected={'/hello' === pathname}>
             Hello
@@ -355,9 +356,10 @@ function PersistentDrawerLeft() {
       >
         <div className={classes.drawerHeader} />
         <Switch>
-          <Route exact path="/" render={() => <div>Home</div>} />
+          <Route exact path="/" render={() => <div>Home ??</div>} />
           <Route exact path="/mail" component={Mail}/>
           <Route exact path="/hello" component={Hello}/>
+          <Route exact path="/graphql" component={GraphQL}/>
           <Route component={NotFound} />
         </Switch>
       </main>
